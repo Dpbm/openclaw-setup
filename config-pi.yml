@@ -25,7 +25,7 @@
           - ca-certificates
           - gnupg
           - ufw
-        state: latest 
+        state: present 
 
     - name: Install keyrings
       become: yes
@@ -60,26 +60,15 @@
           - containerd.io 
           - docker-buildx-plugin 
           - docker-compose-plugin
-        state: latest 
+        state: present 
         update_cache: yes
 
-    - name: Start docker
+    - name: Start and Enable docker
       become: yes
-      shell: systemctl start docker 
-    
-    - name: Enable docker
-      become: yes
-      shell: systemctl enable docker 
-
-    - name: Add docker group
-      become: yes
-      shell: groupadd docker
-      register: result
-      failed_when: false
-
-    - name: User to docker group
-      become: yes
-      shell: usermod -aG docker pi
+      service:
+        name: docker
+        state: started 
+        enabled: yes
 
     - name: Update groups
       user:
@@ -92,11 +81,11 @@
       become: yes
       shell: ufw default deny incoming
 
-    - name: Allow outgoing (Fiewall)
+    - name: Allow outgoing (Firewall)
       become: yes
       shell: ufw default allow outgoing 
 
-    - name: Allow ports (Fiewall)
+    - name: Allow ports (Firewall)
       become: yes
       command: ufw allow {{ item }}/tcp
       loop:
@@ -109,6 +98,9 @@
     - name: Enable Firewall
       become: yes
       shell: ufw --force enable
+
+    - name: Clean unused docker networks
+      shell: docker network prune -f
 
     - name: Run Compose file
       shell: docker compose -f /home/pi/compose.yml up -d
