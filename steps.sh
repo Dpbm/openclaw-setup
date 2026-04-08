@@ -54,3 +54,12 @@ create_folder "$LOCAL_SHARED_FOLDER"
 
 # run_command "openclaw onboard"
 run_command "/bin/sh"
+
+
+# ANSIBLE STUFF
+#
+# ------test connection-----
+# eval "$(ssh-agent -s)"
+# ssh-add ~/.ssh/raspberry_pi_claw
+# ansible -i inventory.ini raspberrypi -m ping
+# ansible-playbook -i inventory.ini config-pi.yml --ask-become-pass

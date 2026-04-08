@@ -1,0 +1,123 @@
+- name: Setup Raspberry Pi
+  hosts: raspberrypi
+
+  tasks:
+    - name: Update apt cache
+      become: yes
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Autoremove
+      become: yes
+      apt: 
+        autoremove: yes
+
+    - name: Get Compose file
+      get_url:
+        url: https://raw.githubusercontent.com/Dpbm/qserver/refs/heads/main/compose.yml
+        dest: /home/pi/compose.yml
+
+    - name: Install dependencies
+      become: yes
+      apt: 
+        name: 
+          - ca-certificates
+          - gnupg
+          - ufw
+        state: latest 
+
+    - name: Install keyrings
+      become: yes
+      shell: install -m 0755 -d /etc/apt/keyrings
+
+    - name: Get keys 
+      become: yes
+      get_url: 
+        url: https://download.docker.com/linux/raspbian/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+
+    - name: Add repo 
+      become: yes
+      copy: 
+        dest: /etc/apt/sources.list.d/docker.sources
+        mode: '0644'
+        content: |
+          Types: deb
+          URIs: https://download.docker.com/linux/ubuntu
+          Suites: {{ ansible_distribution_release }}
+          Components: stable
+          Architectures: arm64
+          Signed-By: /etc/apt/keyrings/docker.asc
+    
+    - name: Install docker
+      become: yes
+      apt: 
+        name: 
+          - docker-ce 
+          - docker-ce-cli 
+          - containerd.io 
+          - docker-buildx-plugin 
+          - docker-compose-plugin
+        state: latest 
+        update_cache: yes
+
+    - name: Start docker
+      become: yes
+      shell: systemctl start docker 
+    
+    - name: Enable docker
+      become: yes
+      shell: systemctl enable docker 
+
+    - name: Add docker group
+      become: yes
+      shell: groupadd docker
+      register: result
+      failed_when: false
+
+    - name: User to docker group
+      become: yes
+      shell: usermod -aG docker pi
+
+    - name: Update groups
+      user:
+        name: pi
+        groups: docker
+        append: yes
+      become: yes
+
+    - name: Deny Incoming (Firewall)
+      become: yes
+      shell: ufw default deny incoming
+
+    - name: Allow outgoing (Fiewall)
+      become: yes
+      shell: ufw default allow outgoing 
+
+    - name: Allow ports (Fiewall)
+      become: yes
+      command: ufw allow {{ item }}/tcp
+      loop:
+        - 22
+        - 3000
+        - 50051
+        - 5672
+        - 15672
+
+    - name: Enable Firewall
+      become: yes
+      shell: ufw --force enable
+
+    - name: Run Compose file
+      shell: docker compose -f /home/pi/compose.yml up -d
+      environment:
+        DB_USERNAME: quantumuser
+        DB_PASSWORD: aQuantumPasswordForOurTest
+        DB_ROOT_USER: toor
+        DB_ROOT_PASSWORD: thorThatGuyYouKnowHim
+        RABBITMQ_USER: hole
+        RABBITMQ_PASSWORD: WhatCanComeOutOfARabbitHole
+        DOMAIN: localdpbmdomain.com
+        
