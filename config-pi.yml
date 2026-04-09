@@ -90,8 +90,7 @@
       command: ufw allow {{ item }}/tcp
       loop:
         - 22
-        - 3000
-        - 50051
+        - 8080
         - 5672
         - 15672
 

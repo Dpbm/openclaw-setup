@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 set -eo pipefail
-
 export OPENCLAW_IMAGE="ghcr.io/openclaw/openclaw:latest"
 
 export OPENCLAW_HOME="/home/node/.openclaw"
@@ -53,8 +52,18 @@ create_folder "$LOCAL_FOLDER"
 create_folder "$LOCAL_SHARED_FOLDER"
 
 # run_command "openclaw onboard"
-run_command "/bin/sh"
+# run_command "/bin/sh"
 
+
+# ollama run gemma4:e2b
+# docker exec -it ollama ollama pull gemma4:e2b
+# docker exec -it openclaw openclaw onboard
+# docker exec -it openclaw /bin/sh
+# 
+# curl -LO https://github.com/fullstorydev/grpcurl/releases/download/v1.9.3/grpcurl_1.9.3_linux_x86_64.tar.gz && \ tar -xvf grpcurl_1.9.3_linux_x86_64.tar.gz && \
+#   rm -rf LICENSE grpcurl_1.9.3_linux_x86_64.tar.gz && \
+#   mkdir -p /app/bin && \
+#   mv grpcurl /app/bin/
 
 # ANSIBLE STUFF
 #
