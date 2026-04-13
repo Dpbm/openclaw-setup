@@ -10,7 +10,7 @@ services:
       - "18789:18789"
     environment:
       - OPENCLAW_TOKEN="${OPENCLAW_TOKEN}"
-      - SERVER_URL=192.168.0.3
+      - SERVER_URL=http://192.168.0.5:8080
     user: "1000:1000"
     healthcheck:
       test:
