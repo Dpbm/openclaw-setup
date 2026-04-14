@@ -22,7 +22,6 @@ OPENCLAW_TOKEN=test docker compose up -d
 ```
 
 ```bash
-```
 # ----- MODELS OLLAMA ----------------------------------------
 
 # Local setup (no docker)
@@ -38,6 +37,8 @@ docker exec -it ollama ollama pull kimi-k2.5:cloud
 docker exec -it ollama ollama pull gemini-3-flash-preview:cloud
 
 # docker exec -it ollama ollama run minimax-m2.7:cloud
+```
+
 
 ```bash
 # TOOLS
