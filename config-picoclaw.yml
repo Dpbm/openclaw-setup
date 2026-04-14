@@ -1,0 +1,41 @@
+- name: Setup PicoClaw on raspberrypi
+  hosts: raspberrypi
+
+  tasks:
+    - name: Update apt cache
+      become: yes
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Autoremove
+      become: yes
+      apt: 
+        autoremove: yes
+
+    - name: Get PicoClaw DEB
+      get_url:
+        url: https://github.com/sipeed/picoclaw/releases/download/v0.2.6/picoclaw_aarch64.deb
+        dest: /tmp/picoclaw.deb
+        force: yes
+
+    - name: Intsall picoclaw deb
+      become: yes
+      apt:
+        deb: /tmp/picoclaw.deb
+        state: present
+        force: yes
+
+    - name: Run Onboard
+      shell: picoclaw onboard
+
+    - name: Copy config to remote
+      copy:
+        src: ./config-picoclaw.json
+        dest: /home/pi/.picoclaw/config.json
+        force: yes
+
+    - name: Run gateway
+      shell: nohup picoclaw gateway > /dev/null 2>&1 &
+
+

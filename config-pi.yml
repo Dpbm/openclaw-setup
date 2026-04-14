@@ -18,6 +18,9 @@
         url: https://raw.githubusercontent.com/Dpbm/qserver/refs/heads/main/compose.yml
         dest: /home/pi/compose.yml
 
+    - name: Fix worker replicas
+      shell: "sed -i 's|replicas: 4|replicas: 1|g' /home/pi/compose.yml"
+
     - name: Install dependencies
       become: yes
       apt: 

@@ -226,3 +226,4 @@ claw/workspace/skills/*
 !claw/workspace/skills/**/SKILL.md
 bins/
 shared/
+config-picoclaw.json
