@@ -1,4 +1,4 @@
-claw/*
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -216,3 +216,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+claw/*
+!claw/workspace/
+claw/workspace/*
+!claw/workspace/skills/
+claw/workspace/skills/*
+!claw/workspace/skills/**/
+!claw/workspace/skills/**/SKILL.md
+bins/
+shared/

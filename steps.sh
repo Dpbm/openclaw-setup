@@ -9,6 +9,9 @@ export LOCAL_FOLDER="./claw"
 export LOCAL_SHARED_FOLDER="./shared"
 export SHARED_FOLDER="/home/node/shared"
 
+export LOCAL_BINS="./bins"
+export IMAGE_BINS="/home/node/bins"
+
 export USER_CLAW_ID=1000
 export USER_CLAW_GID=1000
 
@@ -16,7 +19,6 @@ export PORT_WS=18789
 
 OPENCLAW_TOKEN="${1:-default}"
 
-#docker pull $OPENCLAW_IMAGE
 
 create_folder() {
   local FOLDER="$1"
@@ -44,37 +46,50 @@ run_command() {
     -p "$PORT_WS:$PORT_WS" \
     -v "$LOCAL_FOLDER:$OPENCLAW_HOME" \
     -v "$LOCAL_SHARED_FOLDER:$SHARED_FOLDER" \
+    -v "$LOCAL_BINS:$IMAGE_BINS:ro" \
     -it $OPENCLAW_IMAGE \
     "$COMMAND" #--network host \
 }
 
 create_folder "$LOCAL_FOLDER"
 create_folder "$LOCAL_SHARED_FOLDER"
+create_folder "$LOCAL_BINS"
 
+# docker pull $OPENCLAW_IMAGE
 # run_command "openclaw onboard"
 # run_command "/bin/sh"
 
 # docker compose down
 # OPENCLAW_TOKEN=test docker compose up -d
 
+# ----- MODELS OLLAMA ----------------------------------------
 # ollama run gemma4:e2b
 # docker exec -it ollama ollama pull gemma4:e2b
 # docker exec -it ollama ollama pull gemma4:e4b
 # docker exec -it ollama ollama pull granite4:3b
+# docker exec -it ollama ollama pull minimax-m2.7:cloud
+# docker exec -it ollama ollama pull glm-5.1:cloud
+# docker exec -it ollama ollama pull kimi-k2.5:cloud
+# docker exec -it ollama ollama pull gemini-3-flash-preview:cloud
+#
+# docker exec -it ollama ollama run minimax-m2.7:cloud
+#
+#
+# -------- UPDATE CLAW ---------------------------------------
 # docker exec -it openclaw openclaw onboard
 # docker exec -it openclaw /bin/sh
 # 
-# curl -LO https://github.com/fullstorydev/grpcurl/releases/download/v1.9.3/grpcurl_1.9.3_linux_x86_64.tar.gz && \ tar -xvf grpcurl_1.9.3_linux_x86_64.tar.gz && \
-#   rm -rf LICENSE grpcurl_1.9.3_linux_x86_64.tar.gz && \
-#   mkdir -p /app/bin && \
-#   mv grpcurl /app/bin/
+curl -LO https://github.com/fullstorydev/grpcurl/releases/download/v1.9.3/grpcurl_1.9.3_linux_x86_64.tar.gz && \ 
+  tar -xvf grpcurl_1.9.3_linux_x86_64.tar.gz && \
+  rm -rf LICENSE grpcurl_1.9.3_linux_x86_64.tar.gz && \
+  mv grpcurl ./bins
 
-# ANSIBLE STUFF
+# ---------- ANSIBLE STUFF ------------------------------------
 #
-# ------test connection-----
+# ########test connection##########################
 # ansible -i inventory.ini raspberrypi -m ping
 #
-# ------setup--------------
+# ########setup####################################
 # eval "$(ssh-agent -s)"
 # ssh-add ~/.ssh/raspberry_pi_claw
 # ansible-playbook -i inventory.ini config-pi.yml --ask-become-pass

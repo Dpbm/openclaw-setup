@@ -6,11 +6,13 @@ services:
     volumes:
       - "./claw:/home/node/.openclaw"
       - "./shared:/home/node/shared"
+      - "./bins:/home/node/bins:ro"
     ports:
       - "18789:18789"
     environment:
       - OPENCLAW_TOKEN="${OPENCLAW_TOKEN}"
-      - SERVER_URL=http://192.168.0.5:8080
+      - SERVER_URL=http://192.168.0.4:8080
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/node/bins
     user: "1000:1000"
     healthcheck:
       test:
