@@ -54,9 +54,13 @@ create_folder "$LOCAL_SHARED_FOLDER"
 # run_command "openclaw onboard"
 # run_command "/bin/sh"
 
+# docker compose down
+# OPENCLAW_TOKEN=test docker compose up -d
 
 # ollama run gemma4:e2b
 # docker exec -it ollama ollama pull gemma4:e2b
+# docker exec -it ollama ollama pull gemma4:e4b
+# docker exec -it ollama ollama pull granite4:3b
 # docker exec -it openclaw openclaw onboard
 # docker exec -it openclaw /bin/sh
 # 
@@ -68,7 +72,9 @@ create_folder "$LOCAL_SHARED_FOLDER"
 # ANSIBLE STUFF
 #
 # ------test connection-----
+# ansible -i inventory.ini raspberrypi -m ping
+#
+# ------setup--------------
 # eval "$(ssh-agent -s)"
 # ssh-add ~/.ssh/raspberry_pi_claw
-# ansible -i inventory.ini raspberrypi -m ping
 # ansible-playbook -i inventory.ini config-pi.yml --ask-become-pass
