@@ -6,7 +6,7 @@ metadata:
     "openclaw":
       {
         "emoji": "🫪",
-        "requires": { "bins": ["curl"] },
+        "requires": { "bins": ["curl", "jq"] },
       },
   }
 ---
